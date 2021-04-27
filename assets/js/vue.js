@@ -80,6 +80,15 @@ const Home = {
   data: () => {
     return { products, searchKey: "" };
   },
+  computed: {
+    filteredList() {
+      return this.products.filter((product) => {
+        return product.description
+          .toLowerCase()
+          .includes(this.searchKey.toLowerCase());
+      });
+    },
+  },
 };
 const UserSettings = {
   template: "<h1>User Settings</h1>",

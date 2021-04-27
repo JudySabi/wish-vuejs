@@ -50,46 +50,55 @@
     </div>
     <!-- x-template permet d'être lu dans le component Home de vue.js -->
     <script type="text/x-template" id="home">
-      <div class="home-container"><h1>Articles</h1>
+        <div class="home-container"><h1>Articles</h1>
 
-      <!-- search display -->
-        <input type="search" v-model="searchKey" id="search" placeholder="Rechercher..." autocomplete="off">
+        <!-- search display -->
+          <input type="search" v-model="searchKey" id="search" placeholder="Rechercher..." autocomplete="off">
+          <span v-if='searchKey && filteredList.length >= 1'>
+            {{ filteredList.length}} résultat<span v-if="filteredList.length >=2">s</span>
+          </span>
 
-      <!-- card display -->
-      <div class="card-cart-container">
-        <div class="card-container">
-          <div class="card" v-for="product in products">
+        <!-- card display -->
+        <div class="card-cart-container">
+          <div class="card-container">
+            <div class="card" v-for="product in filteredList">
 
-            <div class="img-container">
-              <img v-bind:src="product.img" alt="">
+              <div class="img-container">
+                <img v-bind:src="product.img" alt="">
+              </div>
+
+            <div class="card-text">
+              <h3>{{product.description}}</h3>
+              <span>{{ product.price}}€</span>
             </div>
 
-          <div class="card-text">
-            <h3>{{product.description}}</h3>
-            <span>{{ product.price}}€</span>
+            <div class="card-icons">
+              <div class="like-container">
+                <input
+                type="checkbox"
+                name="checkbox"
+                v-bind:id="product.id">
+                <label v-bind:for="product.id">
+                  <i class="fas fa-heart"></i>
+                </label>
+              </div>
+
+              <div class="add-to-cart">
+                <button>
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div class="card-icons">
-            <div class="like-container">
-              <input
-              type="checkbox"
-              name="checkbox"
-              v-bind:id="product.id">
-              <label v-bind:for="product.id">
-              <i class="fas fa-heart"></i>
-            </label>
-            </div>
-
-            <div class="add-to-cart">
-              <button>
-                <i class="fas fa-shopping-cart"></i>
-              </button>
-            </div>
+          <!-- no result message -->
+          <div v-if="filteredList.length == []" class="no-result">
+            <h3>Désolé...</h3>
+            <p>Aucun résultat trouvé</p>
           </div>
 
           </div>
         </div>
-      </div>
       </div>
     </script>
 
