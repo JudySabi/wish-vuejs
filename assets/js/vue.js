@@ -113,6 +113,7 @@ const Home = {
       return itemTotal;
     },
   },
+
   methods: {
     // souvent au clique
     setLikeCookie() {
@@ -153,6 +154,7 @@ const Home = {
       this.$delete(this.cart, id);
     },
   },
+
   mounted: () => {
     this.getLikeCookie; // permet de monter l'infos directement au chargement de la page === donc lire directement les liked stocké au préalable dans le tableau
   },
