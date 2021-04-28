@@ -78,7 +78,12 @@ const Home = {
   template: "#home", //je vais cherché dans la balise script un id="home" et lui insère le contenu dans le DOM
   name: "Home",
   data: () => {
-    return { products, searchKey: "" };
+    return {
+      products,
+      searchKey: "",
+      liked: [],
+      cart: [],
+    };
   },
   computed: {
     filteredList() {
@@ -88,6 +93,68 @@ const Home = {
           .includes(this.searchKey.toLowerCase());
       });
     },
+    getLikeCookie() {
+      let cookieValue = JSON.parse($cookies.get("like"));
+      cookieValue === null ? (this.liked = []) : (this.liked = cookieValue);
+      // permet de stocker les éléments du cookies.set (dans methods) dans le tableau liked []
+    },
+    cartTotalAmount() {
+      let total = 0;
+      for (let item in this.cart) {
+        total = total + this.cart[item].quantity * this.cart[item].price;
+      }
+      return total;
+    },
+    itemTotalAmount() {
+      let itemTotal = 0;
+      for (let item in this.cart) {
+        itemTotal = itemTotal + this.cart[item].quantity;
+      }
+      return itemTotal;
+    },
+  },
+  methods: {
+    // souvent au clique
+    setLikeCookie() {
+      document.addEventListener("input", () => {
+        setTimeout(() => {
+          $cookies.set("like", JSON.stringify(this.liked)); //permet de récupérer les éléments clické en like et de les insérer dans un cookie nommé like
+        }),
+          300;
+      });
+    },
+    addToCart(product) {
+      // si déjà dans l'array :
+      for (let i = 0; i < this.cart.length; i++) {
+        if (this.cart[i].id === product.id) {
+          return this.cart[i].quantity++;
+        }
+      }
+
+      this.cart.push({
+        id: product.id,
+        img: product.img,
+        description: product.description,
+        price: product.price,
+        quantity: 1,
+      });
+    },
+    cartPlusOne(product) {
+      product.quantity = product.quantity + 1;
+    },
+    cartMinusOne(product, id) {
+      if (product.quantity == 1) {
+        this.cartRemoveItem(id);
+      } else {
+        product.quantity = product.quantity - 1;
+      }
+    },
+    cartRemoveItem(id) {
+      this.$delete(this.cart, id);
+    },
+  },
+  mounted: () => {
+    this.getLikeCookie; // permet de monter l'infos directement au chargement de la page === donc lire directement les liked stocké au préalable dans le tableau
   },
 };
 const UserSettings = {
